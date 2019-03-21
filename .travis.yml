@@ -25,6 +25,7 @@ script:
 - make build.controller
 - docker --version
 - make docker.controller
+- docker --version
 - go test -race -coverprofile=coverage.txt -covermode=atomic ./pkg/controller/service/resources/
 
 after_success:
