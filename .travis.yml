@@ -16,7 +16,7 @@ before_install:
 - export TRAVIS_BUILD_DIR=$HOME/gopath/src/github.com/cellery-io/mesh-controller
 - cd $HOME/gopath/src/github.com/cellery-io/mesh-controller
 
-# Only use the code in vendor/
+# Only use the code in vendor/ :)
 install: true
 
 script:
