@@ -21,6 +21,7 @@ install: true
 
 script:
 - make tools
+- make code.format-check
 - test -z "$(make code.format-check| tee /dev/stderr)"
 - make build.controller
 - docker --version
