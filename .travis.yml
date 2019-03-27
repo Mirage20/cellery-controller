@@ -20,7 +20,7 @@ before_install:
 install: true
 
 script:
-- make code.format-check
+- test -z "$(make code.format-check| tee /dev/stderr)"
 - make build.controller
 - docker --version
 - make docker.controller
