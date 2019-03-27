@@ -19,12 +19,12 @@ before_install:
 # Only use the code in vendor/ :)
 install: true
 
-script:
+before_script:
 - make tools
-- make code.format-check
+
+script:
 - test -z "$(make code.format-check| tee /dev/stderr)"
 - make build.controller
-- docker --version
 - make docker.controller
 - docker --version
 - go test -race -coverprofile=coverage.txt -covermode=atomic ./pkg/controller/service/resources/
