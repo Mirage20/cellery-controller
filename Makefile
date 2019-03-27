@@ -97,7 +97,7 @@ code.format: tools.goimports
 
 .PHONY: code.format-check
 code.format-check: tools.goimports
-	@goimports -local $(PROJECT_PKG) -l $(GO_FILES)
+	@test -z "$$(goimports -local $(PROJECT_PKG) -l $(GO_FILES) | tee /dev/stderr)"
 
 .PHONY: tools tools.goimports
 

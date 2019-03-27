@@ -20,8 +20,7 @@ before_install:
 install: true
 
 script:
-- pwd
-- env
+- make code.format-check
 - make build.controller
 - docker --version
 - make docker.controller
