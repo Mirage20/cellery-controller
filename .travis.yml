@@ -17,6 +17,10 @@ before_install:
 - export TRAVIS_BUILD_DIR=$HOME/gopath/src/github.com/cellery-io/mesh-controller
 - cd $HOME/gopath/src/github.com/cellery-io/mesh-controller
 
+branches:
+  only:
+  - master
+
 # Only use the code in vendor/
 install: true
 
@@ -24,9 +28,9 @@ before_script:
 - make tools
 
 script:
-- test -z "$(make code.format-check| tee /dev/stderr)"
-- make build.controller
-- make docker.controller
+#- test -z "$(make code.format-check| tee /dev/stderr)"
+#- make build.controller
+#- make docker.controller
 - go test -race -coverprofile=coverage.txt -covermode=atomic ./pkg/controller/service/resources/
 
 after_success:
