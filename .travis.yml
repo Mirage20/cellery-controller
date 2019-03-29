@@ -17,6 +17,10 @@ before_install:
 - export TRAVIS_BUILD_DIR=$HOME/gopath/src/github.com/cellery-io/mesh-controller
 - cd $HOME/gopath/src/github.com/cellery-io/mesh-controller
 
+branches:
+  only:
+  - master
+
 # Only use the code in vendor/
 install: true
 
@@ -24,17 +28,17 @@ before_script:
 - make tools
 
 script:
-- test -z "$(make code.format-check| tee /dev/stderr)"
+#- test -z "$(make code.format-check| tee /dev/stderr)"
 - make build.controller
-- make docker.controller
-- go test -race -coverprofile=coverage.txt -covermode=atomic ./pkg/controller/service/resources/
+#- make docker.controller
+- go test -race -coverprofile=coverage.out -covermode=atomic ./pkg/controller/service/resources/
 
 after_success:
-- bash <(curl -s https://codecov.io/bash)
+- bash <(curl -s https://codecov.io/bash) -f coverage.out
 
-deploy:
-  provider: script
-  script: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD && make docker-push.controller
-  on:
-    branch: master
-  skip_cleanup: true
+#deploy:
+#  provider: script
+#  script: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD && make docker-push.controller
+#  on:
+#    branch: master
+#  skip_cleanup: true
