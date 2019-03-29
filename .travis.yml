@@ -31,10 +31,10 @@ script:
 #- test -z "$(make code.format-check| tee /dev/stderr)"
 #- make build.controller
 #- make docker.controller
-- go test -race -coverprofile=coverage.txt -covermode=atomic ./pkg/controller/service/resources/
+- go test -race -coverprofile=build/coverage.out -covermode=atomic ./pkg/controller/service/resources/
 
 after_success:
-- bash <(curl -s https://codecov.io/bash)
+- bash <(curl -s https://codecov.io/bash) -f build/coverage.out
 
 #deploy:
 #  provider: script
