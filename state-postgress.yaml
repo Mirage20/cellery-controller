@@ -1,0 +1,74 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+spec:
+  ports:
+  - port: 5432
+    name: pgport
+  clusterIP: None
+  selector:
+    app: postgres
+
+---
+
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: pgdatabase
+spec:
+  serviceName: "postgres"
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - name: postgres01
+        image: postgres
+        ports:
+        - containerPort: 5432
+          name: pgport
+        env:
+        - name: POSTGRES_PASSWORD
+          value: "Password123!"
+        volumeMounts:
+        - name: pgvolume
+          mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+  - metadata:
+      name: pgvolume
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: local-storage
+      resources:
+        requests:
+          storage: 2Gi
+---
+#kind: PersistentVolume
+#apiVersion: v1
+#metadata:
+#  name: postgres-data1
+#  labels:
+#    type: local
+#spec:
+#  storageClassName: local-storage
+#  capacity:
+#    storage: 10Gi
+#  local:
+#    path: /data/postgres1
+#  persistentVolumeReclaimPolicy: Retain
+#  accessModes:
+#  - ReadWriteOnce
+#  nodeAffinity:
+#    required:
+#      nodeSelectorTerms:
+#      - matchExpressions:
+#        - key: kubernetes.io/hostname
+#          operator: In
+#          values:
+#          - k8s
+

@@ -1,0 +1,63 @@
+apiVersion: mesh.cellery.io/v1alpha2
+kind: Component
+metadata:
+  name: hr
+spec:
+  #      autoscaling:
+  #        policy:
+  #          minReplicas: 0
+  template:
+    containers:
+    - name: hr-core
+      image: docker.io/celleryio/sampleapp-hr
+      ports:
+      - containerPort: 8080
+      - containerPort: 8081
+      volumeMounts:
+      - name: vol1
+        mountPath: /etc/config
+      - name: pvc-data
+        mountPath: /etc/data
+    - name: hr-side
+      image: docker.io/celleryio/sampleapp-hr
+      ports:
+      - containerPort: 8000
+    volumes:
+    - name: vol1
+      configMap:
+        name: cm-1
+  ports:
+  - name: api
+    protocol: HTTP
+    port: 80
+    targetContainer: hr-core
+    targetPort: 8080
+  - name: stream
+    protocol: GRPC
+    port: 8081
+    targetContainer: hr-core
+    targetPort: 8081
+  volumeClaims:
+  - metadata:
+      name: pvc-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: local-storage
+      resources:
+        requests:
+          storage: 2Gi
+  configurations:
+  - metadata:
+      name: config1
+    data:
+      key1: value1
+      key2: |
+        config file with
+        multiple lines
+  secrets:
+  - metadata:
+      name: secret1
+    data:
+      key1: value1
+      key2: "@base64:LS0tLS1CRUdJ=="
+      key3: "@encrypted:AQCSiNN87la=="
